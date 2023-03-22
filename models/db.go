@@ -14,11 +14,11 @@ var db *gorm.DB
 var err error
 
 func InitDb() {
-	db, err := gorm.Open(mysql.Open(fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", utils.DbUser, utils.DbPassword, utils.DbHost, utils.DbPort, utils.DbName)))
+	db, err = gorm.Open(mysql.Open(fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", utils.DbUser, utils.DbPassword, utils.DbHost, utils.DbPort, utils.DbName)))
 	if err != nil {
 		fmt.Println("链接数据库失败！请检查参数:\n", err)
 	}
-	db.AutoMigrate()
+	db.AutoMigrate(&User{}, &Article{}, &Category{})
 	sqlDB, _ := db.DB()
 	// SetMaxIdleConns 用于设置连接池中空闲连接的最大数量。
 	sqlDB.SetMaxIdleConns(10)

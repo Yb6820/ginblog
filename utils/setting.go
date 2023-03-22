@@ -9,13 +9,18 @@ import (
 var (
 	AppMode  string
 	HttpPort string
+	JwtKey   string
 
-	Db         string
-	DbHost     string
-	DbPort     string
-	DbUser     string
-	DbPassword string
-	DbName     string
+	Db          string
+	DbHost      string
+	DbPort      string
+	DbUser      string
+	DbPassword  string
+	DbName      string
+	AccessKey   string
+	SecretKey   string
+	Bucket      string
+	QiniuServer string
 )
 
 func init() {
@@ -25,12 +30,14 @@ func init() {
 	}
 	LoadServer(file)
 	LoadData(file)
+	LoadQiniu(file)
 }
 
 // 读取服务配置
 func LoadServer(file *ini.File) {
 	AppMode = file.Section("server").Key("AppMode").MustString("debug")
 	HttpPort = file.Section("server").Key("Httpport").MustString(":3000")
+	JwtKey = file.Section("server").Key("JwtKey").MustString("89js82js72")
 }
 
 // 读取数据库配置
@@ -41,4 +48,10 @@ func LoadData(file *ini.File) {
 	DbUser = file.Section("database").Key("DbUser").MustString("root")
 	DbPassword = file.Section("database").Key("DbPassword").MustString("181234")
 	DbName = file.Section("database").Key("DbName").MustString("ginblog")
+}
+func LoadQiniu(file *ini.File) {
+	AccessKey = file.Section("qiniu").Key("AccessKey").String()
+	SecretKey = file.Section("qiniu").Key("SecretKey").String()
+	Bucket = file.Section("qiniu").Key("Bucket").String()
+	QiniuServer = file.Section("qiniu").Key("QiniuServer").String()
 }
