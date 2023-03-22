@@ -1,4 +1,0 @@
-time="2023-03-22 22:12:41" level=info Agent=PostmanRuntime-ApipostRuntime/1.1.0 DataSize=66 HostName=LAPTOP-8TJDJ5E2 IP=127.0.0.1 Method=POST Path=/api/v1/user/add SpendTime="2 ms" status=200
-time="2023-03-22 22:13:00" level=info Agent=PostmanRuntime-ApipostRuntime/1.1.0 DataSize=66 HostName=LAPTOP-8TJDJ5E2 IP=127.0.0.1 Method=POST Path=/api/v1/user/add SpendTime="0 ms" status=200
-time="2023-03-22 22:13:09" level=info Agent=PostmanRuntime-ApipostRuntime/1.1.0 DataSize=46 HostName=LAPTOP-8TJDJ5E2 IP=127.0.0.1 Method=POST Path=/api/v1/user/add SpendTime="0 ms" status=200
-time="2023-03-22 22:13:15" level=info Agent=PostmanRuntime-ApipostRuntime/1.1.0 DataSize=53 HostName=LAPTOP-8TJDJ5E2 IP=127.0.0.1 Method=POST Path=/api/v1/user/add SpendTime="1 ms" status=200
