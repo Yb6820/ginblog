@@ -27,24 +27,37 @@ func AddCategory(c *gin.Context) {
 	})
 }
 
-//查询分类下的所有文章的信息
-
 // 查询分类列表
 func GetCategory(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
-	pageNuM, _ := strconv.Atoi(c.Query("pagenum"))
-	if pageSize == 0 {
-		pageSize = -1
+	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
+	switch {
+	case pageSize >= 100:
+		pageSize = 100
+	case pageSize <= 0:
+		pageSize = 10
 	}
-	if pageNuM == 0 {
-		pageNuM = -1
+
+	if pageNum == 0 {
+		pageNum = 1
 	}
-	data, total := models.GetCategory(pageSize, pageNuM)
+	data, total := models.GetCategory(pageSize, pageNum)
 	code = errmsg.SUCCESS
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,
 		"total":   total,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
+
+// 查询单个分类
+func GetCateInfo(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	data, code := models.GetCateInfo(id)
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"data":    data,
 		"message": errmsg.GetErrMsg(code),
 	})
 }

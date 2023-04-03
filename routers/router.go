@@ -41,7 +41,9 @@ func InitRouter() {
 	{
 		router.POST("user/add", v1.AddUser)
 		router.GET("users", v1.GetUsers)
+		router.GET("user/:id", v1.GetUser)
 		router.GET("categories", v1.GetCategory)
+		router.GET("category/:id", v1.GetCateInfo)
 		router.GET("articles", v1.GetArticle)
 		router.GET("cate/artlist/:id", v1.GetArticleByCate)
 		router.GET("article/:id", v1.GetArticleInfo)

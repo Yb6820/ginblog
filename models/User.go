@@ -27,6 +27,19 @@ func CheckUser(name string) (code int) {
 	return errmsg.SUCCESS
 }
 
+// CheckUpUser 更新查询
+func CheckUpUser(id int, name string) (code int) {
+	var user User
+	db.Select("id, username").Where("username = ?", name).First(&user)
+	if user.ID == uint(id) {
+		return errmsg.SUCCESS
+	}
+	if user.ID > 0 {
+		return errmsg.ERROR_USERNAME_USED //1001
+	}
+	return errmsg.SUCCESS
+}
+
 // hook函数在数据进入数据库之前进行加密
 func (u *User) BeforeCreate(_ *gorm.DB) error {
 	u.Password = ScryptPwd(u.Password)
@@ -44,16 +57,37 @@ func CreateUser(data *User) int {
 	return errmsg.SUCCESS
 }
 
+// 查询单个用户
+func GetUser(id int) (User, int) {
+	var user User
+	err := db.Where("id = ?", id).First(&user).Error
+	if err != nil {
+		return user, errmsg.ERROR
+	}
+	return user, errmsg.SUCCESS
+}
+
 // 查询用户列表(为了避免数据过多，可以先进行分页)
-func GetUsers(pageSize int, pageNum int) ([]User, int) {
-	var user []User
+func GetUsers(username string, pageSize int, pageNum int) ([]User, int) {
+	var users []User
 	var total int64
 	//分页获取后端数据
-	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&user).Count(&total).Error
+	//username不为空时模糊查询
+	if username != "" {
+		err := db.Where("username like ?", username+"%").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
+		db.Where("username like ?", username+"%").Count(&total)
+		if err != nil {
+			return nil, 0
+		}
+		return users, int(total)
+	}
+	//否着返回所有数据
+	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
+	db.Model(&User{}).Count(&total)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, 0
 	}
-	return user, int(total)
+	return users, int(total)
 }
 
 // 编辑用户信息(密码独立出去)
@@ -100,7 +134,7 @@ func CheckLogin(username string, password string) int {
 	if ScryptPwd(password) != user.Password {
 		return errmsg.ERROR_PASSWORD_WRONG
 	}
-	if user.Role != 0 {
+	if user.Role != 1 {
 		return errmsg.ERROR_USER_NOT_RIGHT
 	}
 	return errmsg.SUCCESS
