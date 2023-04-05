@@ -20,6 +20,15 @@ func InitRouter() {
 	r.Use(gin.Recovery())
 	r.Use(middleware.Cors())
 
+	//后台页面托管
+	//r.LoadHTMLFiles("static/admin/index.html")
+	//r.Static("admin/static", "static/admin/static")
+	//r.StaticFile("admin/favicon.ico", "static/admin/favicon.ico")
+
+	r.GET("admin", func(c *gin.Context) {
+		c.HTML(200, "index.html", nil)
+	})
+
 	auth := r.Group("api/v1")
 	auth.Use(middleware.JwtToken())
 	{

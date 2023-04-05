@@ -7,7 +7,7 @@
                         @search="getArtList" />
                 </a-col>
                 <a-col :span="4">
-                    <a-button type="primary" @click="$router.push('/addart')">新增</a-button>
+                    <a-button type="primary" @click="$router.push('/admin/addart')">新增</a-button>
                 </a-col>
 
                 <a-col :span="3">
@@ -40,7 +40,7 @@
                 <template slot="action" slot-scope="data">
                     <div class="actionSlot">
                         <a-button size="small" type="primary" icon="edit" style="margin-right:15px"
-                            @click="$router.push(`/addart/${data.ID}`)">编辑</a-button>
+                            @click="$router.push(`/admin/addart/${data.ID}`)">编辑</a-button>
                         <a-button size="small" type="danger" icon="delete" style="margin-right:15px"
                             @click="deleteArt(data.ID)">删除</a-button>
                     </div>

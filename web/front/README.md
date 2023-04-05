@@ -1,4 +1,4 @@
-# admin
+# front
 
 ## Project setup
 ```
@@ -22,8 +22,3 @@ yarn lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
-
-//打包
-yarn build
-把dist下的文件复制到 
-在后端新建文件
