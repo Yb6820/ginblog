@@ -45,6 +45,10 @@ func InitRouter() {
 		auth.DELETE("article/:id", v1.DeleteArticle)
 		//上传文件
 		auth.POST("/upload", v1.UpLoad)
+
+		// 更新个人设置
+		auth.GET("admin/profile/:id", v1.GetProfile)
+		auth.PUT("profile/:id", v1.UpdateProfile)
 	}
 	router := r.Group("api/v1")
 	{
@@ -54,6 +58,9 @@ func InitRouter() {
 		router.GET("categories", v1.GetCategory)
 		router.GET("category/:id", v1.GetCateInfo)
 		router.GET("articles", v1.GetArticle)
+
+		// 获取个人设置信息
+		router.GET("profile/:id", v1.GetProfile)
 		router.GET("cate/artlist/:id", v1.GetArticleByCate)
 		router.GET("article/:id", v1.GetArticleInfo)
 		router.POST("login", v1.Login)
