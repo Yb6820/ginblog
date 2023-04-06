@@ -1,7 +1,7 @@
 <template>
   <v-app app>
     <TopBar></TopBar>
-    
+
     <v-main class="grey lighten-3">
       <v-container>
         <v-row>
@@ -26,6 +26,6 @@ import Footer from '../components/Footer.vue';
 import Nav from '../components/Nav.vue';
 import TopBar from '../components/TopBar.vue';
 export default {
-  components: {TopBar,Footer,Nav},
+  components: { TopBar, Footer, Nav },
 }
 </script>

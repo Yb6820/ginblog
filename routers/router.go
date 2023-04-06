@@ -5,8 +5,16 @@ import (
 	"ginblog/middleware"
 	"ginblog/utils"
 
+	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 )
+
+func createMyRender() multitemplate.Renderer {
+	p := multitemplate.NewRenderer()
+	p.AddFromFiles("admin", "web/admin/dist/index.html")
+	p.AddFromFiles("front", "web/front/dist/index.html")
+	return p
+}
 
 func InitRouter() {
 	gin.SetMode(utils.AppMode)
@@ -16,17 +24,22 @@ func InitRouter() {
 	// nil 为不计算，避免性能消耗，上线应当设置
 	_ = r.SetTrustedProxies(nil)
 
+	r.HTMLRender = createMyRender()
 	r.Use(middleware.Logger())
 	r.Use(gin.Recovery())
 	r.Use(middleware.Cors())
 
 	//后台页面托管
-	//r.LoadHTMLFiles("static/admin/index.html")
-	//r.Static("admin/static", "static/admin/static")
-	//r.StaticFile("admin/favicon.ico", "static/admin/favicon.ico")
+	r.Static("/static", "./web/front/dist/static")
+	r.Static("/admin", "./web/admin/dist")
+	r.StaticFile("/favicon.ico", "/web/front/dist/favicon.ico")
 
-	r.GET("admin", func(c *gin.Context) {
-		c.HTML(200, "index.html", nil)
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(200, "front", nil)
+	})
+
+	r.GET("/admin", func(c *gin.Context) {
+		c.HTML(200, "admin", nil)
 	})
 
 	auth := r.Group("api/v1")

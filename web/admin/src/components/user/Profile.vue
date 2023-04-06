@@ -1,8 +1,7 @@
 <template>
   <div>
     <a-card>
-        <h3>个人设置</h3>
-        <a-form-model>
+        <a-form-model labelAlign="left" :label-col="{ span: 2 }" :wrapper-col="{ span: 12 }">
                 <a-form-model-item label="作者名称" v-model="profileInfo.name">
                     <a-input style="width:300px"></a-input>
                 </a-form-model-item>
@@ -33,33 +32,41 @@
 
                 <a-form-model-item label="头像">
                     <a-upload
-                    list-type="picture"
                     name="file"
+                    list-type="picture-card"
+                    class="avatar-uploader"
+                    :show-upload-list="false"
                     :action="upUrl"
                     :headers="headers"
                     @change="avatarChange"
                     >
-                    <a-button> <a-icon type="upload" /> 点击上传 </a-button>
-                    <br/>
-                    <template v-if="profileInfo.avatar">
-                      <img :src="profileInfo.avatar" style="width:150px;height:80px">
-                    </template>
+                    <img style="width:120px;height:120px" v-if="profileInfo.avatar" :src="profileInfo.avatar" alt="avatar" />
+                    <div v-else>
+                        <a-icon :type="loading ? 'loading' : 'plus'" />
+                        <div class="ant-upload-text">
+                            Upload
+                        </div>
+                    </div>
                     </a-upload>
                 </a-form-model-item>
 
                 <a-form-model-item label="头像背景图">
                     <a-upload
-                    list-type="picture"
                     name="file"
+                    list-type="picture-card"
+                    class="avatar-uploader"
+                    :show-upload-list="false"
                     :action="upUrl"
                     :headers="headers"
                     @change="imgChange"
                     >
-                    <a-button> <a-icon type="upload" /> 点击上传 </a-button>
-                    <br/>
-                    <template v-if="profileInfo.img">
-                      <img :src="profileInfo.img" style="width:150px;height:80px">
-                    </template>
+                    <img style="width:150px;height:120px" v-if="profileInfo.img" :src="profileInfo.img" alt="avatar" />
+                    <div v-else>
+                        <a-icon :type="loading ? 'loading' : 'plus'" />
+                        <div class="ant-upload-text">
+                            Upload
+                        </div>
+                    </div>
                     </a-upload>
                 </a-form-model-item>
 
@@ -106,7 +113,7 @@ methods:{
     // 上传头像
     avatarChange(info) {
             if (info.file.status !== 'uploading') {
-                console.log(info.file, info.fileList)
+                
             }
             if (info.file.status === 'done') {
                 this.$message.success('图片上传成功')
@@ -119,7 +126,7 @@ methods:{
         //上传头像背景图
         imgChange(info) {
             if (info.file.status !== 'uploading') {
-                console.log(info.file, info.fileList)
+                
             }
             if (info.file.status === 'done') {
                 this.$message.success('图片上传成功')

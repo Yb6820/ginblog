@@ -1,2 +1,0 @@
-time="2023-04-06 21:48:34" level=info Agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.41" DataSize=0 HostName=LAPTOP-8TJDJ5E2 IP="::1" Method=OPTIONS Path=/api/v1/login SpendTime="0 ms" status=204
-time="2023-04-06 21:48:34" level=info Agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.41" DataSize=215 HostName=LAPTOP-8TJDJ5E2 IP="::1" Method=POST Path=/api/v1/login SpendTime="49 ms" status=200
