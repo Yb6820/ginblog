@@ -31,12 +31,23 @@ func CreateCategory(data *Category) int {
 	return errmsg.SUCCESS
 }
 
+// 查询单个分类信息
+func GetCateInfo(id int) (Category, int) {
+	var cate Category
+	err := db.Where("id = ?", id).First(&cate).Error
+	if err != nil {
+		return cate, errmsg.ERROR
+	}
+	return cate, errmsg.SUCCESS
+}
+
 // 查询分类列表(为了避免数据过多，可以先进行分页)
 func GetCategory(pageSize int, pageNum int) ([]Category, int) {
 	var categories []Category
 	var total int64
 	//分页获取后端数据
-	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&categories).Count(&total).Error
+	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&categories).Error
+	db.Model(&categories).Count(&total)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, 0
 	}

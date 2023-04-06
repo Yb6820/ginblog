@@ -11,12 +11,14 @@ var (
 	HttpPort string
 	JwtKey   string
 
-	Db          string
-	DbHost      string
-	DbPort      string
-	DbUser      string
-	DbPassword  string
-	DbName      string
+	Db         string
+	DbHost     string
+	DbPort     string
+	DbUser     string
+	DbPassword string
+	DbName     string
+
+	Zone        int
 	AccessKey   string
 	SecretKey   string
 	Bucket      string
@@ -50,6 +52,7 @@ func LoadData(file *ini.File) {
 	DbName = file.Section("database").Key("DbName").MustString("ginblog")
 }
 func LoadQiniu(file *ini.File) {
+	Zone = file.Section("qiniu").Key("Zone").MustInt(3)
 	AccessKey = file.Section("qiniu").Key("AccessKey").String()
 	SecretKey = file.Section("qiniu").Key("SecretKey").String()
 	Bucket = file.Section("qiniu").Key("Bucket").String()

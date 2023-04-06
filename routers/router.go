@@ -20,6 +20,15 @@ func InitRouter() {
 	r.Use(gin.Recovery())
 	r.Use(middleware.Cors())
 
+	//后台页面托管
+	//r.LoadHTMLFiles("static/admin/index.html")
+	//r.Static("admin/static", "static/admin/static")
+	//r.StaticFile("admin/favicon.ico", "static/admin/favicon.ico")
+
+	r.GET("admin", func(c *gin.Context) {
+		c.HTML(200, "index.html", nil)
+	})
+
 	auth := r.Group("api/v1")
 	auth.Use(middleware.JwtToken())
 	{
@@ -36,13 +45,22 @@ func InitRouter() {
 		auth.DELETE("article/:id", v1.DeleteArticle)
 		//上传文件
 		auth.POST("/upload", v1.UpLoad)
+
+		// 更新个人设置
+		auth.GET("admin/profile/:id", v1.GetProfile)
+		auth.PUT("profile/:id", v1.UpdateProfile)
 	}
 	router := r.Group("api/v1")
 	{
 		router.POST("user/add", v1.AddUser)
 		router.GET("users", v1.GetUsers)
+		router.GET("user/:id", v1.GetUser)
 		router.GET("categories", v1.GetCategory)
+		router.GET("category/:id", v1.GetCateInfo)
 		router.GET("articles", v1.GetArticle)
+
+		// 获取个人设置信息
+		router.GET("profile/:id", v1.GetProfile)
 		router.GET("cate/artlist/:id", v1.GetArticleByCate)
 		router.GET("article/:id", v1.GetArticleInfo)
 		router.POST("login", v1.Login)
