@@ -13,6 +13,7 @@
             <a-menu-item key="artlist"><a-icon type="snippets"></a-icon><span>文章列表</span></a-menu-item>
         </a-sub-menu>
         <a-menu-item key="catelist"><a-icon type="book"></a-icon><span>分类列表</span></a-menu-item>
+        <a-menu-item key="commentlist"><a-icon type="message"/><span>评论管理</span></a-menu-item>
         <a-menu-item key="userlist"><a-icon type="user"></a-icon><span>用户列表</span></a-menu-item>
         <a-menu-item key="profile"><a-icon type="setting"></a-icon><span>个人设置</span></a-menu-item>
       </a-menu>

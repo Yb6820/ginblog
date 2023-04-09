@@ -33,6 +33,7 @@
                     </a-upload>
                 </a-form-model-item>
                 <a-form-model-item label="文章内容" prop="content">
+                  <Editor v-model="artInfo.content"></Editor>
                 </a-form-model-item>
                 <a-form-model-item>
                     <a-button type="primary" style="margin-right:15px" @click="artSubmit(artInfo.id)"> {{ artInfo.id?'更新':'提交' }} </a-button>
@@ -45,7 +46,9 @@
 
 <script>
 import { Url } from '../../plugins/http'
+import Editor from '../editor/index'
 export default {
+  components:{Editor},
   props: ['id'],
   data () {
     return {

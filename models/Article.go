@@ -48,7 +48,7 @@ func SearchArticle(title string, pageSize int, pageNum int) ([]Article, int, int
 	var articleList []Article
 	var err error
 	var total int64
-	err = db.Select("article.id,title, img, created_at, updated_at, `desc`, comment_count, read_count, Category.name").Order("Created_At DESC").Joins("Category").Where("title LIKE ?",
+	err = db.Select("articles.id,title, img, created_at, updated_at, `desc`, comment_count, read_count, Category.name").Order("Created_At DESC").Joins("Category").Where("title LIKE ?",
 		title+"%",
 	).Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&articleList).Error
 	//单独计数
@@ -67,7 +67,7 @@ func GetArticleByCate(id int, pageSize int, pageNum int) ([]Article, int, int) {
 	var cateArtlist []Article
 	var total int64
 	err := db.Preload("Category").Limit(pageSize).Offset((pageNum-1)*pageSize).Where("cid = ?", id).Find(&cateArtlist).Error
-	db.Model(&Article{}).Count(&total)
+	db.Model(&Article{}).Where("cid = ?", id).Count(&total)
 	if err != nil {
 		return nil, errmsg.ERROR_CATE_NOT_EXIST, 0
 	}
@@ -78,6 +78,7 @@ func GetArticleByCate(id int, pageSize int, pageNum int) ([]Article, int, int) {
 func GetArticleInfo(id int) (*Article, int) {
 	var art Article
 	err := db.Preload("Category").Where("id = ?", id).First(&art).Error
+	db.Model(&art).Where("id = ?", id).UpdateColumn("read_count", gorm.Expr("read_count + ?", 1))
 	if err != nil {
 		return &art, errmsg.ERROR_ART_NOT_EXIST
 	}

@@ -7,14 +7,14 @@ import moment from 'moment'
 
 import './plugins/http'
 
-Vue.filter('dateformat', function(indate, outdate) {
-    return moment(indate).format(outdate)
+Vue.filter('dateformat', function (indate, outdate) {
+  return moment(indate).format(outdate)
 })
 
 Vue.config.productionTip = false
 
 new Vue({
-    router,
-    vuetify,
-    render: (h) => h(App),
+  router,
+  vuetify,
+  render: (h) => h(App),
 }).$mount('#app')

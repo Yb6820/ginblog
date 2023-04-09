@@ -1,6 +1,16 @@
 import Vue from 'vue'
+import Message from 'vue-multiple-message'
 import Vuetify from 'vuetify/lib/framework'
-
+Message.config({
+  top: 60,
+  duration: 3000,
+  zIndex: 2000,
+})
+Vue.prototype.$message = Message
 Vue.use(Vuetify)
 
-export default new Vuetify({})
+export default new Vuetify({
+  breakpoint: {
+    mobileBreakpoint: 'sm', // 等于960
+  },
+})

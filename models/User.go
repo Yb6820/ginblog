@@ -139,3 +139,18 @@ func CheckLogin(username string, password string) int {
 	}
 	return errmsg.SUCCESS
 }
+
+// CheckLoginFront 前台登录
+func CheckLoginFront(username string, password string) (User, int) {
+	var user User
+
+	db.Where("username = ?", username).First(&user)
+
+	if user.ID == 0 {
+		return user, errmsg.ERROR_USER_NOT_EXIST
+	}
+	if ScryptPwd(password) != user.Password {
+		return user, errmsg.ERROR_PASSWORD_WRONG
+	}
+	return user, errmsg.SUCCESS
+}

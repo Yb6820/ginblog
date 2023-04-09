@@ -1,64 +1,84 @@
 <template>
   <v-col>
-    <v-card class="ma-3" v-for="item in artList" :key="item.ID" link @click="$router.push(`detail/${item.ID}`)">
-        <v-row no-gutters>
-            <v-col class="d-flex justify-center align-center mx-3" cols="2">
-                <v-img max-height="100" max-width="100" :src="item.img"></v-img>
-            </v-col>
-            <v-col>
-                <v-card-title class="my-2">
-                    <v-chip color="pink" label class="mr-3 white--text">{{ item.Category.name }}</v-chip>
-                    {{ item.title }}
-                </v-card-title>
-                <v-card-subtitle>{{ item.desc }}</v-card-subtitle>
-                <v-divider></v-divider>
-                <v-card-text>
-                    <v-icon>{{ 'mdi-calendar-month' }}</v-icon>
-                    <span>{{ item.CreatedAt | dateformat('YYYY-MM-DD HH:mm') }}</span>
-                </v-card-text>
-            </v-col>
-        </v-row>
+    <v-card
+      class="ma-3 d-flex flex-no-wrap justify-space-between align-center"
+      v-for="item in artList"
+      :key="item.ID"
+      link
+      @click="$router.push({ path: `/article/detail/${item.ID}` })"
+    >
+      <v-avatar class="ma-3 hidden-sm-and-down" size="125" tile>
+        <v-img :src="item.img"></v-img>
+      </v-avatar>
+
+      <v-col>
+        <v-card-title>
+          <v-chip color="pink" outlined label class="mr-3 white--text">
+            {{ item.Category.name }}
+          </v-chip>
+          <div>{{ item.title }}</div>
+        </v-card-title>
+        <v-card-subtitle class="mt-1">{{ item.desc }}</v-card-subtitle>
+        <v-divider class="mx-4"></v-divider>
+        <v-card-text class="d-flex align-center">
+          <div class="d-flex align-center">
+            <v-icon class="mr-1" small>{{ 'mdi-calendar-month' }}</v-icon>
+            <span>{{ item.CreatedAt | dateformat('YYYY-MM-DD') }}</span>
+          </div>
+          <div class="mx-4 d-flex align-center">
+            <v-icon class="mr-1" small>{{ 'mdi-comment' }}</v-icon>
+            <span>{{ item.comment_count }}</span>
+          </div>
+          <div class="mx-1 d-flex align-center">
+            <v-icon class="mr-1" small>{{ 'mdi-eye' }}</v-icon>
+            <span>{{ item.read_count }}</span>
+          </div>
+        </v-card-text>
+      </v-col>
     </v-card>
     <div class="text-center">
-        <v-pagination 
-        v-model="queryParam.pagenum" 
-        :length="Math.ceil(this.total/queryParam.pagesize)"
-        total-visible="5"
-        @input="getArtlist()"
-        ></v-pagination>
+      <v-pagination
+        color="indigo"
+        total-visible="7"
+        v-model="queryParam.pagenum"
+        :length="Math.ceil(total / queryParam.pagesize)"
+        @input="getArtList()"
+      ></v-pagination>
     </div>
   </v-col>
 </template>
-
 <script>
 export default {
-    data(){
-        return{
-            artList: [],
-            queryParam: {
-                pagesize:5,
-                pagenum:1
-            },
-            total:0
-        }
-    },
-    created(){
-        this.getArtlist()
-    },
-    methods:{
-        //获取文章列表
-        async getArtlist(){
-            const{data:res}=await this.$http.get('articles',{params:{
-                pagesize:this.queryParam.pagesize,
-                pagenum:this.queryParam.pagenum
-            }})
-            this.artList=res.data
-            this.total=res.total
-        }
+  data() {
+    return {
+      artList: [],
+      queryParam: {
+        pagesize: 5,
+        pagenum: 1,
+      },
+
+      count: 0,
+      total: 0,
     }
+  },
+  created() {},
+  mounted() {
+    this.getArtList()
+  },
+  filters: {},
+  methods: {
+    // 获取文章列表
+    async getArtList() {
+      const { data: res } = await this.$http.get('articles', {
+        params: {
+          pagesize: this.queryParam.pagesize,
+          pagenum: this.queryParam.pagenum,
+        },
+      })
+      this.artList = res.data
+      this.total = res.total
+    },
+  },
 }
 </script>
-
-<style>
-
-</style>
+<style lang=""></style>
