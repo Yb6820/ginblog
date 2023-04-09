@@ -2,32 +2,32 @@
   <div>
     <a-card>
         <a-form-model labelAlign="left" :label-col="{ span: 2 }" :wrapper-col="{ span: 12 }">
-                <a-form-model-item label="作者名称" v-model="profileInfo.name">
-                    <a-input style="width:300px"></a-input>
+                <a-form-model-item label="作者名称">
+                    <a-input style="width:300px" v-model="profileInfo.name"></a-input>
                 </a-form-model-item>
                 
-                <a-form-model-item label="个人简介" v-model="profileInfo.desc">
-                    <a-input type="textarea"></a-input>
+                <a-form-model-item label="个人简介">
+                    <a-input type="textarea" v-model="profileInfo.desc"></a-input>
                 </a-form-model-item>
 
-                <a-form-model-item label="QQ号码" v-model="profileInfo.qq_chat">
-                    <a-input style="width:300px"></a-input>
+                <a-form-model-item label="QQ号码">
+                    <a-input style="width:300px" v-model="profileInfo.qq_chat"></a-input>
                 </a-form-model-item>
 
-                <a-form-model-item label="微信" v-model="profileInfo.wechat">
-                    <a-input style="width:300px"></a-input>
+                <a-form-model-item label="微信">
+                    <a-input style="width:300px" v-model="profileInfo.wechat"></a-input>
                 </a-form-model-item>
 
-                <a-form-model-item label="微博" v-model="profileInfo.weibo">
-                    <a-input style="width:300px"></a-input>
+                <a-form-model-item label="微博">
+                    <a-input style="width:300px" v-model="profileInfo.weibo"></a-input>
                 </a-form-model-item>
 
-                <a-form-model-item label="B站地址" v-model="profileInfo.bili">
-                    <a-input style="width:300px"></a-input>
+                <a-form-model-item label="B站地址">
+                    <a-input style="width:300px" v-model="profileInfo.bili"></a-input>
                 </a-form-model-item>
 
-                <a-form-model-item label="email" v-model="profileInfo.email">
-                    <a-input style="width:300px"></a-input>
+                <a-form-model-item label="email">
+                    <a-input style="width:300px" v-model="profileInfo.email"></a-input>
                 </a-form-model-item>
 
                 <a-form-model-item label="头像">

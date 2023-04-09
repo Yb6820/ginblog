@@ -23,7 +23,6 @@ func UpdateProfile(c *gin.Context) {
 	var data models.Profile
 	id, _ := strconv.Atoi(c.Param("id"))
 	_ = c.ShouldBindJSON(&data)
-
 	code := models.UpdateProfile(id, &data)
 
 	c.JSON(http.StatusOK, gin.H{
