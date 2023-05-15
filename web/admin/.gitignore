@@ -1,6 +1,6 @@
 .DS_Store
 node_modules
-
+src/plugins/http.js
 
 # local env files
 .env.local
