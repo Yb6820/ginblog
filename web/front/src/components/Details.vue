@@ -10,10 +10,10 @@
         </v-icon>
         <span>{{ artInfo.CreatedAt | dateformat('YYYY-MM-DD') }}</span>
       </div>
-      <div class="d-flex mr-10 justify-center">
+      <!-- <div class="d-flex mr-10 justify-center">
         <v-icon class="mr-1" color="pink" small>{{ 'mdi-comment' }}</v-icon>
         <span>{{ total }}</span>
-      </div>
+      </div> -->
       <div class="d-flex mr-10 justify-center">
         <v-icon class="mr-1" color="green" small>{{ 'mdi-eye' }}</v-icon>
         <span>{{ artInfo.read_count }}</span>
