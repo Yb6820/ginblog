@@ -8,6 +8,7 @@ type Profile struct {
 	Desc      string `gorm:"type:varchar(200)" json:"desc"`
 	Qqchat    string `gorm:"type:varchar(200)" json:"qq_chat"`
 	Wechat    string `gorm:"type:varchar(100)" json:"wechat"`
+	Git       string `gorm:"type:varchar(100)" json:"git"`
 	Weibo     string `gorm:"type:varchar(200)" json:"weibo"`
 	Bili      string `gorm:"type:varchar(200)" json:"bili"`
 	Email     string `gorm:"type:varchar(200)" json:"email"`

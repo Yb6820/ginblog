@@ -33,7 +33,7 @@
     <div v-html="artInfo.content" class="content ma-5 pa-3 text-justify"></div>
 
     <v-divider class="ma-5"></v-divider>
-    <v-sheet class="ma-3 pa-3">
+    <!-- <v-sheet class="ma-3 pa-3">
       <div>
         <v-list
           outlined
@@ -56,8 +56,8 @@
             </v-list-item>
           </template>
         </v-list>
-      </div>
-      <div class="text-center" v-if="commentList">
+      </div> -->
+      <!-- <div class="text-center" v-if="commentList">
         <v-pagination
           class="my-2"
           total-visible="7"
@@ -65,8 +65,9 @@
           :length="Math.ceil(total / queryParam.pagesize)"
           @input="getCommentList()"
         ></v-pagination>
-      </div>
-      <div>
+      </div> -->
+
+      <!-- <div>
         <template>
           <v-card flat>
             <v-alert
@@ -94,7 +95,7 @@
             </div>
           </v-card>
         </template>
-      </div>
+      </div> -->
     </v-sheet>
   </div>
 </template>

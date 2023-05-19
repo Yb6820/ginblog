@@ -38,6 +38,24 @@
 
       <v-list-item>
         <v-list-item-icon class="ma-3">
+          <v-icon color="indigo">{{ 'mdi-email' }}</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content class="grey--text">{{
+          profileInfo.email
+        }}</v-list-item-content>
+      </v-list-item>
+      <!-- 添加git跳转链接 -->
+      <v-list-item>
+        <v-list-item-icon class="ma-3">
+          <v-icon color="indigo">{{ 'mdi-git' }}</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content class="grey--text">
+          <a :href="profileInfo.git" target="_blank">{{ profileInfo.git }}</a>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item>
+        <v-list-item-icon class="ma-3">
           <v-icon color="orange darken-2">{{ 'mdi-sina-weibo' }}</v-icon>
         </v-list-item-icon>
         <v-list-item-content class="grey--text">{{
@@ -49,19 +67,11 @@
         <v-list-item-icon class="ma-3">
           <v-icon color="primary">{{ 'mdi-youtube' }}</v-icon>
         </v-list-item-icon>
-        <v-list-item-content class="grey--text">{{
-          profileInfo.bili
-        }}</v-list-item-content>
+        <v-list-item-content class="grey--text">
+          <a :href="profileInfo.bili" target="_blank">{{ profileInfo.bili }}</a>
+        </v-list-item-content>
       </v-list-item>
 
-      <v-list-item>
-        <v-list-item-icon class="ma-3">
-          <v-icon color="indigo">{{ 'mdi-email' }}</v-icon>
-        </v-list-item-icon>
-        <v-list-item-content class="grey--text">{{
-          profileInfo.email
-        }}</v-list-item-content>
-      </v-list-item>
     </v-list>
   </v-card>
 </template>
