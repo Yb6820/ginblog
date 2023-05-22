@@ -25,10 +25,10 @@
             <v-icon class="mr-1" small>{{ 'mdi-calendar-month' }}</v-icon>
             <span>{{ item.CreatedAt | dateformat('YYYY-MM-DD') }}</span>
           </div>
-          <!-- <div class="mx-4 d-flex align-center">
+          <div class="mx-4 d-flex align-center">
             <v-icon class="mr-1" small>{{ 'mdi-comment' }}</v-icon>
             <span>{{ item.comment_count }}</span>
-          </div> -->
+          </div>
           <div class="mx-1 d-flex align-center">
             <v-icon class="mr-1" small>{{ 'mdi-eye' }}</v-icon>
             <span>{{ item.read_count }}</span>

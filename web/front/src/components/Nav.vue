@@ -94,7 +94,7 @@ export default {
         `profile/${this.profileInfo.id}`
       )
       this.profileInfo = res.data
-      this.$root.$emit('msg', res.data.icp_record)
+      this.$root.$emit('msg', res.data)
     },
   },
 }
