@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+	"io"
 	"math"
 	"os"
 	"time"
@@ -17,16 +18,16 @@ func Logger() gin.HandlerFunc {
 	//linkName := "latest_log.log"
 
 	//创建文件并设置权限
-	src, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0755)
-	if err != nil {
-		fmt.Println("err:", err)
-	}
+	// src, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0755)
+	// if err != nil {
+	// 	fmt.Println("err:", err)
+	// }
 
 	//新建一个日志中间件
 	logger := logrus.New()
 
 	//将日志信息转存到log.log
-	logger.Out = src
+	logger.SetOutput(io.Discard)
 
 	//设置日志级别
 	logger.SetLevel(logrus.DebugLevel)
@@ -34,12 +35,12 @@ func Logger() gin.HandlerFunc {
 	//按时间分割日志文件
 	logWriter, _ := retalog.New(
 		filePath+"%Y%m%d.log",
-		retalog.WithMaxAge(14*24*time.Hour),
+		retalog.WithMaxAge(30*24*time.Hour),
 		retalog.WithRotationTime(24*time.Hour),
 		//retalog.WithLinkName(linkName),
 	)
 
-	//设置什么文件可以写到文件里面
+	//设置什么级别的数据可以写到文件里面
 	writeMap := lfshook.WriterMap{
 		logrus.InfoLevel:  logWriter,
 		logrus.FatalLevel: logWriter,

@@ -23,6 +23,19 @@ var (
 	SecretKey   string
 	Bucket      string
 	QiniuServer string
+
+	//redis配置
+	RedisAddr     string
+	RedisPassword string
+	DB            int
+	PoolSize      int
+	MinIdleConn   int
+
+	//邮箱配置
+	MailCompany string
+	MailAccount string
+	MailPort    int
+	MailKey     string
 )
 
 func init() {
@@ -33,6 +46,8 @@ func init() {
 	LoadServer(file)
 	LoadData(file)
 	LoadQiniu(file)
+	LoadMail(file)
+	LoadRedis(file)
 }
 
 // 读取服务配置
@@ -57,4 +72,17 @@ func LoadQiniu(file *ini.File) {
 	SecretKey = file.Section("qiniu").Key("SecretKey").String()
 	Bucket = file.Section("qiniu").Key("Bucket").String()
 	QiniuServer = file.Section("qiniu").Key("QiniuServer").String()
+}
+func LoadMail(file *ini.File) {
+	MailCompany = file.Section("Email").Key("MailCompany").MustString("smtp.126.com")
+	MailKey = file.Section("Email").Key("MailKey").MustString("youbet6820@126.com")
+	MailPort = file.Section("Email").Key("MailPort").MustInt(25)
+	MailAccount = file.Section("Email").Key("MailAccount").MustString("KSZPBUCAAKYDSLXK")
+}
+func LoadRedis(file *ini.File) {
+	RedisAddr = file.Section("redis").Key("RedisAddr").MustString("121.37.246.78")
+	RedisPassword = file.Section("redis").Key("RedisPassword").MustString("181234")
+	DB = file.Section("redis").Key("RedisAddr").MustInt(0)
+	PoolSize = file.Section("redis").Key("PoolSize").MustInt(30)
+	MinIdleConn = file.Section("redis").Key("MinIdleConn").MustInt(30)
 }

@@ -93,6 +93,9 @@ func InitRouter() {
 		router.GET("comment/info/:id", v1.GetComment)
 		router.GET("commentfront/:id", v1.GetCommentListFront)
 		router.GET("commentcount/:id", v1.GetCommentCount)
+
+		//发送邮箱验证码
+		router.GET("sendverifycode", v1.SendEmail)
 	}
-	r.Run(utils.HttpPort)
+	r.Run(":8080")
 }

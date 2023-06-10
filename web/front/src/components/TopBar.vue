@@ -125,6 +125,13 @@
                   label="请确认密码"
                   type="password"
                 ></v-text-field>
+                <v-text-field
+                    v-model="formdata.email"
+                    :rules="checkEmailRules"
+                    counter="50"
+                    label="请输入邮箱号"
+                    type="password"
+                  ></v-text-field>
               </v-card-text>
               <v-card-actions class="justify-end">
                 <v-btn text @click="registerUser">确定</v-btn>
@@ -172,6 +179,7 @@ export default {
       formdata: {
         username: '',
         password: '',
+        email:'',
       },
       checkPassword: '',
       dialog: false,

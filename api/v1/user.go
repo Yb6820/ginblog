@@ -12,12 +12,12 @@ import (
 
 var code int
 
-// 添加用户
+// 添加用户(还差把邮箱号写入数据库)
 func AddUser(c *gin.Context) {
 	var data models.User
 	var msg string
 	_ = c.ShouldBindJSON(&data)
-
+	verify := c.Query("verify")
 	//数据校验
 	msg, code = validator.Validate(&data)
 	if code != errmsg.SUCCESS {
@@ -30,16 +30,24 @@ func AddUser(c *gin.Context) {
 
 	code = models.CheckUser(data.Username)
 	if code == errmsg.SUCCESS {
-		models.CreateUser(&data)
+		code = models.CreateUser(&data, verify)
 	}
 	/* if code == errmsg.ERROR_USERNAME_USED {
 		code = errmsg.ERROR_USERNAME_USED
 	} */
-	c.JSON(http.StatusOK, gin.H{
-		"status":  code,
-		"data":    data,
-		"message": errmsg.GetErrMsg(code),
-	})
+	if code != errmsg.SUCCESS {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  code,
+			"data":    nil,
+			"message": errmsg.GetErrMsg(code),
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  code,
+			"data":    data,
+			"message": errmsg.GetErrMsg(code),
+		})
+	}
 }
 
 // 查询单个用户的信息
@@ -99,5 +107,22 @@ func DeleteUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"message": errmsg.GetErrMsg(code),
+	})
+}
+
+// 提供一个通过邮箱发送验证码并返回验证码给前端进行校验
+func SendEmail(c *gin.Context) {
+	toEmail := c.Query("email")
+	str, code := models.SendEmail(toEmail)
+	if code != errmsg.SUCCESS {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  code,
+			"message": errmsg.GetErrMsg(code),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"message": str,
 	})
 }

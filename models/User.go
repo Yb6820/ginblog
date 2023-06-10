@@ -1,11 +1,17 @@
 package models
 
 import (
+	"context"
 	"encoding/base64"
+	"ginblog/utils"
 	"ginblog/utils/errmsg"
 	"log"
+	"math/rand"
+	"strings"
+	"time"
 
 	"golang.org/x/crypto/scrypt"
+	"gopkg.in/gomail.v2"
 	"gorm.io/gorm"
 )
 
@@ -13,6 +19,7 @@ type User struct {
 	gorm.Model
 	Username string `gorm:"type:varchar(20);not null " json:"username" validate:"required,min=4,max=12" label:"用户名"`
 	Password string `gorm:"type:varchar(500);not null" json:"password" validate:"required,min=6,max=120" label:"密码"`
+	Email    string `gorm:"type:varchar(50);not null" json:"email" validate:"required" label:"邮箱"`
 	Role     int    `gorm:"type:int;DEFAULT:2" json:"role" validate:"required,gte=2" label:"角色码"`
 }
 
@@ -48,9 +55,18 @@ func (u *User) BeforeCreate(_ *gorm.DB) error {
 }
 
 // 新增用户
-func CreateUser(data *User) int {
+func CreateUser(data *User, verify string) int {
 	//data.Password = ScryptPwd(data.Password)
-	err := db.Create(&data).Error
+	//校验邮箱验证码
+	ctx := context.TODO()
+	resg, err := Red.Get(ctx, data.Email).Result()
+	if err != nil {
+		return errmsg.REDIS_GET_VERIFY_ERROR
+	}
+	if verify != resg {
+		return errmsg.ERROR_VERIFY_NOT_SAME
+	}
+	err = db.Create(&data).Error
 	if err != nil {
 		return errmsg.ERROR
 	}
@@ -153,4 +169,41 @@ func CheckLoginFront(username string, password string) (User, int) {
 		return user, errmsg.ERROR_PASSWORD_WRONG
 	}
 	return user, errmsg.SUCCESS
+}
+
+// 向注册账号的人发送验证码
+func SendEmail(toEmail string) (string, int) {
+	m := gomail.NewMessage()
+	rand.Seed(time.Now().Unix())
+	verifybyte := make([]string, 6)
+	var strs []string = []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
+	for i := 0; i < 6; i++ {
+		verifybyte[i] = strs[rand.Intn(62)]
+	}
+	ctx := context.TODO()
+	verify := strings.Join(verifybyte, "")
+	//设置超时时间为5分钟
+	_, err := Red.Set(ctx, toEmail, verify, 5*time.Minute).Result()
+	if err != nil {
+		return "", errmsg.REDIS_SET_VERIFY_ERROR
+	}
+	//发送人
+	m.SetHeader("From", utils.MailAccount)
+	//收件人
+	m.SetHeader("To", toEmail)
+	//主体
+	m.SetHeader("Subject", "Youbet's Blog")
+	//内容
+	m.SetBody("text/html", "<h4>您正在Youbet's Blog里注册账号</h4><h6>验证码为： </h6><h4>"+verify+"</h4>")
+	//将验证码存到Redis并设置过期时间
+
+	//KSZPBUCAAKYDSLXK(授权码)
+	d := gomail.NewDialer(utils.MailCompany, utils.MailPort, utils.MailAccount, utils.MailKey)
+	//
+	//d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	//发送邮件
+	if err := d.DialAndSend(m); err != nil {
+		return "", errmsg.EMAIL_ERROR
+	}
+	return verify, errmsg.SUCCESS
 }
