@@ -58,7 +58,7 @@
 </template>
 <script>
 export default {
-  props: ['searchInfo'],
+  props: ['title','cid'],
   data() {
     return {
       artList: [],
@@ -70,6 +70,20 @@ export default {
       isLoad: false,
     }
   },
+  watch: {
+    title: {
+      handler() {
+        this.getArtList()
+      },
+      immediate: true,
+    },
+    cid: {
+      handler(){
+        this.getArtList
+      },
+      immediate:true,
+    }
+  },
   mounted() {
     this.getArtList()
   },
@@ -78,8 +92,8 @@ export default {
     async getArtList() {
       const { data: res } = await this.$http.get('articles', {
         params: {
-          cid:this.searchInfo.cid,
-          title: this.searchInfo.title,
+          cid:this.cid,
+          title: this.title,
           pagesize: this.queryParam.pagesize,
           pagenum: this.queryParam.pagenum,
         },
