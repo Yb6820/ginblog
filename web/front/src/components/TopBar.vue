@@ -38,7 +38,7 @@
           dark
           append-icon="mdi-text-search"
           v-model="searchName"
-          @change="searchTitle(searchName)"
+          @keyup.enter="searchTitle(searchName)"
         ></v-text-field>
       </v-responsive>
 
@@ -174,6 +174,7 @@ export default {
       group: null,
       valid: true,
       registerformvalid: true,
+      SelectedCid:0,
       cateList: [],
       searchName: '',
       formdata: {
@@ -230,10 +231,16 @@ export default {
     // 查找文章标题
     searchTitle(title) {
       if (title.length == 0) return this.$message.error('你还没填入搜索内容哦')
-      this.$router.push(`/search/${title}`)
+      this.$router.push({name: 'search',params:{
+        searchInfo:{
+          title:title,
+          cid:this.SelectedCid,
+        }
+      }})
     },
 
     gotoCate(cid) {
+      this.SelectedCid=cid
       this.$router.push(`/category/${cid}`).catch((err) => err)
     },
     // 登录

@@ -58,7 +58,7 @@
 </template>
 <script>
 export default {
-  props: ['title'],
+  props: ['searchInfo'],
   data() {
     return {
       artList: [],
@@ -78,7 +78,8 @@ export default {
     async getArtList() {
       const { data: res } = await this.$http.get('articles', {
         params: {
-          title: this.title,
+          cid:this.searchInfo.cid,
+          title: this.searchInfo.title,
           pagesize: this.queryParam.pagesize,
           pagenum: this.queryParam.pagenum,
         },

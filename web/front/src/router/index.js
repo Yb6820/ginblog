@@ -34,7 +34,8 @@ const routes = [
     props: true,
   },
   {
-    path: '/search/:title',
+    path: '/search',
+    name: 'search',
     component: Search,
     meta: { title: '搜索结果' },
     props: true,

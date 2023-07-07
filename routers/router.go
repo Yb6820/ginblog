@@ -97,5 +97,5 @@ func InitRouter() {
 		//发送邮箱验证码
 		router.GET("sendverifycode", v1.SendEmail)
 	}
-	r.Run(":8080")
+	r.Run(utils.HttpPort)
 }

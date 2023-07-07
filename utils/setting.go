@@ -60,8 +60,8 @@ func LoadServer(file *ini.File) {
 // 读取数据库配置
 func LoadData(file *ini.File) {
 	Db = file.Section("database").Key("Db").MustString("mysql")
-	DbHost = file.Section("database").Key("DbHost").MustString("localhost")
-	DbPort = file.Section("database").Key("DbPort").MustString("3306")
+	DbHost = file.Section("database").Key("DbHost").MustString("121.37.246.78")
+	DbPort = file.Section("database").Key("DbPort").MustString("3307")
 	DbUser = file.Section("database").Key("DbUser").MustString("root")
 	DbPassword = file.Section("database").Key("DbPassword").MustString("181234")
 	DbName = file.Section("database").Key("DbName").MustString("ginblog")
@@ -75,14 +75,14 @@ func LoadQiniu(file *ini.File) {
 }
 func LoadMail(file *ini.File) {
 	MailCompany = file.Section("Email").Key("MailCompany").MustString("smtp.126.com")
-	MailKey = file.Section("Email").Key("MailKey").MustString("youbet6820@126.com")
+	MailKey = file.Section("Email").Key("MailKey").String()
 	MailPort = file.Section("Email").Key("MailPort").MustInt(25)
-	MailAccount = file.Section("Email").Key("MailAccount").MustString("KSZPBUCAAKYDSLXK")
+	MailAccount = file.Section("Email").Key("MailAccount").MustString("youbet6820@126.com")
 }
 func LoadRedis(file *ini.File) {
-	RedisAddr = file.Section("redis").Key("RedisAddr").MustString("121.37.246.78")
+	RedisAddr = file.Section("redis").Key("RedisAddr").MustString("121.37.246.78:6379")
 	RedisPassword = file.Section("redis").Key("RedisPassword").MustString("181234")
-	DB = file.Section("redis").Key("RedisAddr").MustInt(0)
+	DB = file.Section("redis").Key("DB").MustInt(0)
 	PoolSize = file.Section("redis").Key("PoolSize").MustInt(30)
 	MinIdleConn = file.Section("redis").Key("MinIdleConn").MustInt(30)
 }

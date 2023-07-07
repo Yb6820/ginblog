@@ -60,6 +60,7 @@ func GetArticle(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
 	title := c.Query("title")
+	cid, _ := strconv.Atoi(c.Query("cid"))
 
 	switch {
 	case pageSize >= 100:
@@ -82,7 +83,7 @@ func GetArticle(c *gin.Context) {
 		return
 	}
 
-	data, code, total := models.SearchArticle(title, pageSize, pageNum)
+	data, code, total := models.SearchArticle(cid, title, pageSize, pageNum)
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,
