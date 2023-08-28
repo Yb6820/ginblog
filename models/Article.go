@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"ginblog/utils/errmsg"
 
 	"gorm.io/gorm"
@@ -49,7 +48,6 @@ func SearchArticle(cid int, title string, pageSize int, pageNum int) ([]Article,
 	var articleList []Article
 	var err error
 	var total int64
-	fmt.Printf("cid 等于 %d\n", cid)
 	if cid == 0 {
 		err = db.Select("articles.id,title, img, created_at, updated_at, `desc`, comment_count, read_count, Category.name").Order("Created_At DESC").Joins("Category").Where("title LIKE ?",
 			title+"%",

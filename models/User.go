@@ -84,7 +84,7 @@ func GetUser(id int) (User, int) {
 }
 
 // 查询用户列表(为了避免数据过多，可以先进行分页)
-func GetUsers(username string, pageSize int, pageNum int) ([]User, int) {
+func GetUsers(username string, pageSize int, pageNum int) ([]User, int, int) {
 	var users []User
 	var total int64
 	//分页获取后端数据
@@ -93,17 +93,17 @@ func GetUsers(username string, pageSize int, pageNum int) ([]User, int) {
 		err := db.Where("username like ?", username+"%").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
 		db.Where("username like ?", username+"%").Count(&total)
 		if err != nil {
-			return nil, 0
+			return nil, 0, errmsg.ERROR
 		}
-		return users, int(total)
+		return users, int(total), errmsg.SUCCESS
 	}
 	//否着返回所有数据
 	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
 	db.Model(&User{}).Count(&total)
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, 0
+		return nil, 0, errmsg.ERROR
 	}
-	return users, int(total)
+	return users, int(total), errmsg.SUCCESS
 }
 
 // 编辑用户信息(密码独立出去)

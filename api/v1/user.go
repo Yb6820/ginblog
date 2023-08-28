@@ -72,14 +72,22 @@ func GetUsers(c *gin.Context) {
 	if pageNuM == 0 {
 		pageNuM = -1
 	}
-	data, total := models.GetUsers(username, pageSize, pageNuM)
-	code = errmsg.SUCCESS
-	c.JSON(http.StatusOK, gin.H{
-		"status":  code,
-		"data":    data,
-		"total":   total,
-		"message": errmsg.GetErrMsg(code),
-	})
+	data, total, code := models.GetUsers(username, pageSize, pageNuM)
+	if code != errmsg.SUCCESS {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  code,
+			"data":    nil,
+			"total":   0,
+			"message": errmsg.GetErrMsg(code),
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  code,
+			"data":    data,
+			"total":   total,
+			"message": errmsg.GetErrMsg(code),
+		})
+	}
 }
 
 // 编辑用户

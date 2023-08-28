@@ -48,6 +48,7 @@ func InitRouter() {
 		//用户模块的路由接口
 		auth.PUT("user/:id", v1.EditUser)
 		auth.DELETE("user/:id", v1.DeleteUser)
+		auth.POST("user/add", v1.AddUser)
 		//分类模块的路由接口
 		auth.POST("category/add", v1.AddCategory)
 		auth.PUT("category/:id", v1.EditCategory)
@@ -71,7 +72,6 @@ func InitRouter() {
 	}
 	router := r.Group("api/v1")
 	{
-		router.POST("user/add", v1.AddUser)
 		router.GET("users", v1.GetUsers)
 		router.GET("user/:id", v1.GetUser)
 		router.GET("categories", v1.GetCategory)

@@ -14,7 +14,8 @@ import UserList from '../components/user/UserList.vue'
 
 Vue.use(VueRouter)
 
-const routes = [{
+const routes = [
+    {
         path: '/login',
         name: 'login',
         component: Login

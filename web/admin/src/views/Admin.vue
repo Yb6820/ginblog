@@ -25,6 +25,11 @@ export default {
 </script>
 
 <style scoped>
+.headerBtn{
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
 .container {
   height: 100%;
 }
