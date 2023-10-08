@@ -11,6 +11,7 @@ import CateList from '../components/category/CateList.vue'
 import CommentList from '../components/comment/CommentList.vue'
 import Profile from '../components/user/Profile.vue'
 import UserList from '../components/user/UserList.vue'
+import RecruitmentList from "@/components/recruitment/RecruitmentList.vue";
 
 Vue.use(VueRouter)
 
@@ -35,7 +36,8 @@ const routes = [
             { path: 'catelist', component: CateList },
             { path: 'userlist', component: UserList },
             { path: 'profile', component: Profile },
-            { path: 'commentlist', component: CommentList }
+            { path: 'commentlist', component: CommentList },
+            { path:'recruitlist',component: RecruitmentList}
         ]
     }
 ]
@@ -44,14 +46,14 @@ const router = new VueRouter({
     routes
 })
 
-router.beforeEach((to, from, next) => {
-    const token = window.sessionStorage.getItem('token')
-    if (to.path === '/login') return next()
-    if (!token) {
-        next('/login')
-    } else {
-        next()
-    }
-})
+// router.beforeEach((to, from, next) => {
+//     const token = window.sessionStorage.getItem('token')
+//     if (to.path === '/login') return next()
+//     if (!token) {
+//         next('/login')
+//     } else {
+//         next()
+//     }
+// })
 
 export default router

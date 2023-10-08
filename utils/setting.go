@@ -39,7 +39,7 @@ var (
 )
 
 func init() {
-	file, err := ini.Load("config/config.ini")
+	file, err := ini.Load("config/localconfig.ini")
 	if err != nil {
 		fmt.Println("配置文件读取事失误！")
 	}
