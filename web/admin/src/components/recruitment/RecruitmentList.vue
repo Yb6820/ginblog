@@ -2,13 +2,40 @@
   <div>
     <a-card>
       <a-row :gutter="20">
-        <a-col :span="6">
-          <a-input-search
-            v-model="queryParam.username"
-            placeholder="输入用户名查找"
+        <a-col :span="5">
+          <a-input
+            v-model="queryParam.companyName"
+            placeholder="输入公司名称"
+            @keyup.enter="getRecruitmentList"
+          ></a-input>
+        </a-col>
+        <a-col :span="5">
+          <a-input
+            v-model="queryParam.deliveryJob"
+            placeholder="输入投递职位名称"
+            @keyup.enter="getRecruitmentList"
+          ></a-input>
+        </a-col>
+        <a-col :span="5">
+          <a-date-picker
+            style="width: 220px"
+            v-model="queryParam.deliveryTime"
+            placeholder="输入投递时间"
+            @change="getRecruitmentList"
+          ></a-date-picker>
+        </a-col>
+        <a-col :span="5">
+          <a-select
+            v-model="queryParam.deliveryStatus"
+            placeholder="选择投递状态"
+            style="width: 220px"
             enter-button
             allowClear
-            @search="getUserList"/>
+            @change="getRecruitmentList">
+            <a-select-option v-for="item in recruitmentStatusLabels" :key="item.key">
+              {{ item.label }}
+            </a-select-option>
+          </a-select>
         </a-col>
         <a-col :span="4">
           <a-button type="primary" @click="addUserVisible=true">新增</a-button>
@@ -18,7 +45,7 @@
       <a-table
         :columns="columns"
         :pagination='pagination'
-        :dataSource="userList"
+        :dataSource="recruitmentList"
         rowKey="ID"
         bordered
         @change="handleTableChange"
@@ -86,28 +113,62 @@ const columns = [
   {
     title: 'ID',
     dataIndex: 'ID',
-    width: '10%',
+    width: '5%',
     key: 'id',
     align: 'center'
   },
   {
-    title: '用户名',
-    dataIndex: 'username',
-    width: '20%',
-    key: 'username',
+    title: '公司名称',
+    dataIndex: 'company_name',
+    width: '10%',
+    key: 'company_name',
     align: 'center'
   },
   {
-    title: '角色',
-    dataIndex: 'role',
-    width: '20%',
-    key: 'role',
+    title: '投递职位',
+    dataIndex: 'job_name',
+    width: '10%',
+    key: 'job_name',
     align: 'center',
-    scopedSlots: { customRender: 'role' }
+  },
+  {
+    title: '投递日期',
+    dataIndex: 'delivery_time',
+    width: '10%',
+    key: 'delivery_time',
+    align: 'center',
+  },
+  {
+    title: '投递结果',
+    dataIndex: 'result',
+    width: '10%',
+    key: 'result',
+    align: 'center',
+  },
+  {
+    title: '投递状态',
+    dataIndex: 'status',
+    width: '10%',
+    key: 'status',
+    align: 'center',
+  },
+  {
+    title: '原因',
+    dataIndex: 'reason',
+    width: '10%',
+    key: 'reason',
+    align: 'center',
+  },
+  {
+    title: '描述',
+    dataIndex: 'desc',
+    width: '10%',
+    key: 'desc',
+    align: 'center'
   },
   {
     title: '操作',
-    width: '30%',
+    width: '15%',
     key: 'action',
     align: 'center',
     scopedSlots: { customRender: 'action' }
@@ -125,10 +186,23 @@ export default {
         showSizeChanger: true,
         showTotal: (total) => `共${total}条`
       },
-      userList: [],
+      recruitmentStatusLabels:[
+        {
+          key:0,
+          label:'全部'
+        },
+        {
+          key:1,
+          label:'已投递'
+        },
+      ],
+      recruitmentList: [],
       columns,
       queryParam: {
-        username: '',
+        companyName: '',
+        deliveryJob:'',
+        deliveryTime:'',
+        deliveryStatus:0,
         pagesize: 5,
         pagenum: 1
       },
@@ -187,19 +261,22 @@ export default {
     }
   },
   created () {
-    this.getUserList()
+    this.getRecruitmentList()
   },
   methods: {
-    async getUserList () {
-      const { data: res } = await this.$http.get('users', {
+    async getRecruitmentList () {
+      const { data: res } = await this.$http.get('recruitments', {
         params: {
-          username: this.queryParam.username,
+          company_name: this.queryParam.companyName,
+          delivery_job:this.queryParam.deliveryJob,
+          delivery_time:this.queryParam.deliveryTime,
+          delivery_status:this.queryParam.deliveryStatus,
           pagesize: this.queryParam.pagesize,
           pagenum: this.queryParam.pagenum
         }
       })
       if (res.status !== 200) return this.$message.error(res.message)
-      this.userList = res.data
+      this.recruitmentList = res.data
       this.pagination.total = res.total
     },
     // 修改分页时触发

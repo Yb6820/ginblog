@@ -82,7 +82,7 @@ func InitDb() {
 	if err != nil {
 		fmt.Println("链接数据库失败！请检查参数:\n", err)
 	}
-	db.AutoMigrate(&User{}, &Article{}, &Category{}, &Profile{}, &Comment{}, &Recruitment{})
+	db.AutoMigrate(&User{}, &Article{}, &Category{}, &Profile{}, &Comment{}, &Recruitment{}, &RecruitStatus{})
 	sqlDB, _ := db.DB()
 	// SetMaxIdleConns 用于设置连接池中空闲连接的最大数量。
 	sqlDB.SetMaxIdleConns(10)

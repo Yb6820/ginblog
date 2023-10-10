@@ -96,6 +96,9 @@ func InitRouter() {
 
 		//发送邮箱验证码
 		router.GET("sendverifycode", v1.SendEmail)
+
+		//招聘模块
+		router.GET("recruitments", v1.GetRecruitmentList)
 	}
 	r.Run(utils.HttpPort)
 }

@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"ginblog/models"
 	"ginblog/utils"
 	"ginblog/utils/errmsg"
 	"net/http"
@@ -14,14 +15,16 @@ import (
 var JwtKey = []byte(utils.JwtKey)
 
 type MyClaims struct {
+	Userid   uint   `json:"userId"`
 	Username string `json:"username"`
 	jwt.StandardClaims
 }
 
 // 生成token
-func SetToken(username string) (string, int) {
-	expireTime := time.Now().Add(10 * time.Hour)
+func SetToken(id uint, username string) (string, int) {
+	expireTime := time.Now().Add(3 * 24 * time.Hour)
 	SetClaims := MyClaims{
+		Userid:   id,
 		Username: username,
 		StandardClaims: jwt.StandardClaims{
 			//过期时间
@@ -98,7 +101,10 @@ func JwtToken() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		c.Set("username", key.Username)
+		c.Set("user", models.UserInfo{
+			Userid:   key.Userid,
+			Username: key.Username,
+		})
 		c.Next()
 	}
 }

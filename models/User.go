@@ -22,6 +22,10 @@ type User struct {
 	Email    string `gorm:"type:varchar(50);not null" json:"email" validate:"required" label:"邮箱"`
 	Role     int    `gorm:"type:int;DEFAULT:2" json:"role" validate:"required,gte=2" label:"角色码"`
 }
+type UserInfo struct {
+	Userid   uint   `json:"user_id"`
+	Username string `json:"username"`
+}
 
 // 查询用户是否存在
 func CheckUser(name string) (code int) {
@@ -141,19 +145,19 @@ func ScryptPwd(password string) string {
 }
 
 // 登陆验证
-func CheckLogin(username string, password string) int {
+func CheckLogin(username string, password string) (User, int) {
 	var user User
 	db.Where("username = ?", username).First(&user)
 	if user.ID == 0 {
-		return errmsg.ERROR_USER_NOT_EXIST
+		return user, errmsg.ERROR_USER_NOT_EXIST
 	}
 	if ScryptPwd(password) != user.Password {
-		return errmsg.ERROR_PASSWORD_WRONG
+		return user, errmsg.ERROR_PASSWORD_WRONG
 	}
 	if user.Role != 1 {
-		return errmsg.ERROR_USER_NOT_RIGHT
+		return user, errmsg.ERROR_USER_NOT_RIGHT
 	}
-	return errmsg.SUCCESS
+	return user, errmsg.SUCCESS
 }
 
 // CheckLoginFront 前台登录

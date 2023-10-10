@@ -12,12 +12,12 @@ import (
 
 // 登录接口
 func Login(c *gin.Context) {
-	var data models.User
-	c.ShouldBindJSON(&data)
+	username := c.PostForm("username")
+	password := c.PostForm("password")
 	var token string
-	code := models.CheckLogin(data.Username, data.Password)
+	data, code := models.CheckLogin(username, password)
 	if code == errmsg.SUCCESS {
-		token, code = middleware.SetToken(data.Username)
+		token, code = middleware.SetToken(data.ID, data.Username)
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,

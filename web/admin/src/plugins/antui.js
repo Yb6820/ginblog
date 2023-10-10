@@ -15,7 +15,8 @@ import {
   Modal,
   Select,
   Switch,
-  Upload
+  Upload,
+  DatePicker
 } from 'ant-design-vue'
 message.config({
   top: '100px',
@@ -41,3 +42,4 @@ Vue.use(Modal)
 Vue.use(Select)
 Vue.use(Switch)
 Vue.use(Upload)
+Vue.use(DatePicker)
