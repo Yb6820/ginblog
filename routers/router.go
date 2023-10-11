@@ -69,6 +69,10 @@ func InitRouter() {
 		auth.DELETE("delcomment/:id", v1.DeleteComment)
 		auth.PUT("checkcomment/:id", v1.CheckComment)
 		auth.PUT("uncheckcomment/:id", v1.UncheckComment)
+
+		//招聘模块
+		auth.GET("recruitments", v1.GetRecruitmentList)
+		auth.POST("recruitment/add", v1.AddRecruitment)
 	}
 	router := r.Group("api/v1")
 	{
@@ -97,8 +101,6 @@ func InitRouter() {
 		//发送邮箱验证码
 		router.GET("sendverifycode", v1.SendEmail)
 
-		//招聘模块
-		router.GET("recruitments", v1.GetRecruitmentList)
 	}
 	r.Run(utils.HttpPort)
 }
