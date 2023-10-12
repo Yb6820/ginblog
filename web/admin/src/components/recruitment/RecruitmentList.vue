@@ -110,14 +110,33 @@
       @cancel="editRecruitmentCancel"
     >
       <a-form-model :model="Recruitmentinfo" :rules="editRecruitmentRules" ref="editRecruitmentRef">
-        <a-form-model-item label="用户名" prop="Recruitmentname">
-          <a-input v-model="Recruitmentinfo.Recruitmentname"></a-input>
+        <a-form-model-item label="投递公司" prop="companyName">
+          <a-input v-model="newRecruitment.companyName"></a-input>
         </a-form-model-item>
-        <a-form-model-item label="是否为管理员" prop="role">
-          <a-select :defaultValue=Recruitmentinfo.role.toString() style="width: 120px" @change="editRoleChange">
-            <a-select-option key="1" value="1">是</a-select-option>
-            <a-select-option key="2" value="2">否</a-select-option>
+        <a-form-model-item label="投递职位" prop="deliveryJob">
+          <a-input v-model="newRecruitment.deliveryJob"></a-input>
+        </a-form-model-item>
+        <a-form-model-item label="第几自愿" prop="deliveryVoluntary">
+          <a-select v-model="newRecruitment.voluntaryNum">
+            <a-select-option v-for="item in voluntaries" :key="item.key">{{ item.label }}</a-select-option>
           </a-select>
+        </a-form-model-item>
+        <a-form-model-item label="投递状态">
+          <a-select v-model="newRecruitment.deliveryStatus">
+            <a-select-option v-for="item in recruitmentStatusLabels"   :key="item.key">{{ item.label }}</a-select-option>
+          </a-select>
+        </a-form-model-item>
+        <a-form-model-item has-feedback label="投递时间" prop="checkpass">
+          <a-input v-model="newRecruitment.deliveryTime"></a-input>
+        </a-form-model-item>
+        <a-form-model-item label="投递结果">
+          <a-input v-model="newRecruitment.deliveryRes"></a-input>
+        </a-form-model-item>
+        <a-form-model-item label="原因">
+          <a-input v-model="newRecruitment.reason"></a-input>
+        </a-form-model-item>
+        <a-form-model-item label="其他描述">
+          <a-textarea v-model="newRecruitment.desc" :auto-size="{ minRows: 3,maxRows:5 }"></a-textarea>
         </a-form-model-item>
       </a-form-model>
     </a-modal>
@@ -209,7 +228,7 @@ export default {
       voluntaries:[
         { key:1 ,label: '第一自愿' },
         { key:2 ,label: '第二自愿' },
-        { key:3 ,label: '第三自愿'}
+        { key:3 ,label: '第三自愿' }
       ],
       recruitmentList: [],
       columns,

@@ -73,6 +73,9 @@ func InitRouter() {
 		//招聘模块
 		auth.GET("recruitments", v1.GetRecruitmentList)
 		auth.POST("recruitment/add", v1.AddRecruitment)
+		auth.POST("recruitment/edit", v1.EditRecruitment)
+		auth.POST("recruitment/next", v1.NextStepRecruitment)
+		
 	}
 	router := r.Group("api/v1")
 	{

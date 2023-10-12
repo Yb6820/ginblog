@@ -57,3 +57,40 @@ func AddRecruitment(c *gin.Context) {
 		"message": errmsg.GetErrMsg(code),
 	})
 }
+
+// 编辑应聘信息
+func EditRecruitment(c *gin.Context) {
+	var entity models.RecruitmentModel
+	fmt.Printf("编辑应聘信息获取到的数据%+v\n", entity)
+	user, _ := c.Get("user")
+	code := models.EditRecruitment(entity, user.(models.UserInfo))
+	if code != errmsg.SUCCESS {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  code,
+			"message": errmsg.GetErrMsg(code),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
+
+// 招聘信息进入下一步
+func NextStepRecruitment(c *gin.Context) {
+	var entity models.RecruitmentModel
+	fmt.Printf("下一步招聘信息获取到的数据%+v\n", entity)
+	code := models.NextStepRecruitment(entity)
+	if code != errmsg.SUCCESS {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  code,
+			"message": errmsg.GetErrMsg(code),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
