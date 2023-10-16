@@ -7,15 +7,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 func GetRecruitmentList(c *gin.Context) {
 	req := models.RecruitQueryCond{}
 	req.CompanyName = c.Query("company_name")
 	req.DeliveryJob = c.Query("delivery_job")
-	t, _ := time.Parse("", c.Query("delivery_time"))
-	req.DeliveryTime = models.MyTime(t)
+	req.DeliveryTime = c.Query("delivery_time")
 	req.DeliveryStatus, _ = strconv.Atoi(c.Query("delivery_status"))
 	req.PageSize, _ = strconv.Atoi(c.Query("pagesize"))
 	req.PageNum, _ = strconv.Atoi(c.Query("pagenum"))
@@ -61,6 +59,7 @@ func AddRecruitment(c *gin.Context) {
 // 编辑应聘信息
 func EditRecruitment(c *gin.Context) {
 	var entity models.RecruitmentModel
+	c.ShouldBindJSON(&entity)
 	fmt.Printf("编辑应聘信息获取到的数据%+v\n", entity)
 	user, _ := c.Get("user")
 	code := models.EditRecruitment(entity, user.(models.UserInfo))
@@ -80,6 +79,7 @@ func EditRecruitment(c *gin.Context) {
 // 招聘信息进入下一步
 func NextStepRecruitment(c *gin.Context) {
 	var entity models.RecruitmentModel
+	c.ShouldBindJSON(&entity)
 	fmt.Printf("下一步招聘信息获取到的数据%+v\n", entity)
 	code := models.NextStepRecruitment(entity)
 	if code != errmsg.SUCCESS {

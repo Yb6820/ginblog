@@ -75,7 +75,7 @@ func InitRouter() {
 		auth.POST("recruitment/add", v1.AddRecruitment)
 		auth.POST("recruitment/edit", v1.EditRecruitment)
 		auth.POST("recruitment/next", v1.NextStepRecruitment)
-		
+
 	}
 	router := r.Group("api/v1")
 	{
@@ -105,5 +105,5 @@ func InitRouter() {
 		router.GET("sendverifycode", v1.SendEmail)
 
 	}
-	r.Run(utils.HttpPort)
+	r.Run("127.0.0.1" + utils.HttpPort)
 }

@@ -18,11 +18,15 @@ const (
 	ERROR_TOKEN_TYPE_WRONG = 1007
 	ERROR_USER_NOT_RIGHT   = 1008
 	ERROR_VERIFY_NOT_SAME  = 1009 //验证码不一致
+
 	//code = 2000...文章模块的错误
 	ERROR_ART_NOT_EXIST = 2001
 	//code = 3000...分类模块的错误
 	ERROR_CATENAME_USED  = 3001
 	ERROR_CATE_NOT_EXIST = 3002
+
+	//应聘模块
+	ERROR_STATUS_EXIST = 4001
 )
 
 var codeMsg = map[int]string{
@@ -43,6 +47,7 @@ var codeMsg = map[int]string{
 	REDIS_SET_VERIFY_ERROR: "set验证码出错",
 	REDIS_GET_VERIFY_ERROR: "get验证码出错",
 	ERROR_VERIFY_NOT_SAME:  "验证码不一致",
+	ERROR_STATUS_EXIST:     "该状态已存在，请重新选择状态",
 }
 
 func GetErrMsg(code int) string {

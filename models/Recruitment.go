@@ -1,32 +1,57 @@
 package models
 
 import (
-	"database/sql/driver"
-	"errors"
 	"fmt"
 	"ginblog/utils/errmsg"
 	"gorm.io/gorm"
-	"time"
 )
 
-type MyTime time.Time
-
-func (t MyTime) Value() (driver.Value, error) {
-	tTime := time.Time(t)
-	return tTime.Format("2006-01-02"), nil
-}
-func (t *MyTime) Scan(v interface{}) error {
-	switch vt := v.(type) {
-	case []byte:
-		tTime, _ := time.Parse("2006-01-02", string(vt))
-		*t = MyTime(tTime)
-	default:
-		return errors.New("类型错误")
-	}
-	return nil
-}
-
 type Voluntary int
+
+func (v Voluntary) ToString() string {
+	switch v {
+	case 0:
+		return "全部"
+	case 1:
+		return "已投递"
+	case 2:
+		return "待测评"
+	case 3:
+		return "已测评"
+	case 4:
+		return "待笔试"
+	case 5:
+		return "笔试完成"
+	case 6:
+		return "笔试挂"
+	case 7:
+		return "待一面"
+	case 8:
+		return "一面完成"
+	case 9:
+		return "一面挂"
+	case 10:
+		return "待二面"
+	case 11:
+		return "二面完成"
+	case 12:
+		return "二面挂"
+	case 13:
+		return "待三面"
+	case 14:
+		return "三面完成"
+	case 15:
+		return "三面挂"
+	case 16:
+		return "待hr面"
+	case 17:
+		return "hr面完成"
+	case 18:
+		return "hr面挂"
+	default:
+		return ""
+	}
+}
 
 /*
 Recruitment表示用户对应的公司和投递的岗位，RecruitStatus表示每一个投递信息的各种状态
@@ -41,7 +66,7 @@ type Recruitment struct {
 
 type RecruitStatus struct {
 	RecruitId      uint   `json:"recruit_id"`
-	DeliveryTime   MyTime `json:"delivery_time" dc:"投递日期"`
+	DeliveryTime   string `json:"delivery_time" gorm:"type:varchar(20)" dc:"投递日期"`
 	DeliveryRes    string `json:"result" gorm:"type:longtext" dc:"投递结果"`
 	DeliveryStatus int    `json:"status" dc:"投递状态"`
 	Reason         string `json:"reason" gorm:"type:longtext" dc:"原因"`
@@ -50,21 +75,22 @@ type RecruitStatus struct {
 
 // select recruitment.id,CompanyName,DeliveryJob,DeliveryTime,DeliveryStatus,DeliveryRes,Reason,Desc from
 type RecruitRes struct {
-	ID             uint   `json:"id"`
-	CompanyName    string `json:"company_name" gorm:"type:varchar(100)" dc:"公司名称"`
-	DeliveryJob    string `json:"job_name" gorm:"type:varchar(200)" dc:"投递职位"`
-	DeliveryTime   MyTime `json:"delivery_time" dc:"投递日期"`
-	DeliveryRes    string `json:"result" gorm:"type:longtext" dc:"投递结果"`
-	DeliveryStatus int    `json:"status" dc:"投递状态"`
-	Reason         string `json:"reason" gorm:"type:longtext" dc:"原因"`
-	Desc           string `json:"desc" gorm:"type:longtext" dc:"描述"`
+	ID             uint      `json:"id"`
+	CompanyName    string    `json:"company_name" gorm:"type:varchar(100)" dc:"公司名称"`
+	DeliveryJob    string    `json:"job_name" gorm:"type:varchar(200)" dc:"投递职位"`
+	VoluntaryNum   Voluntary `json:"voluntary_num" `
+	DeliveryTime   string    `json:"delivery_time" dc:"投递日期"`
+	DeliveryRes    string    `json:"result" gorm:"type:longtext" dc:"投递结果"`
+	DeliveryStatus int       `json:"status" dc:"投递状态"`
+	Reason         string    `json:"reason" gorm:"type:longtext" dc:"原因"`
+	Desc           string    `json:"desc" gorm:"type:longtext" dc:"描述"`
 }
 
 // 查询条件
 type RecruitQueryCond struct {
 	CompanyName    string `json:"company_name" dc:"公司名称"`
 	DeliveryJob    string `json:"job_name" dc:"投递职位"`
-	DeliveryTime   MyTime `json:"delivery_time" dc:"投递日期"`
+	DeliveryTime   string `json:"delivery_time" dc:"投递日期"`
 	DeliveryStatus int    `json:"status" dc:"投递状态"`
 	PageSize       int    `json:"pagesize" dc:"分页大小"`
 	PageNum        int    `json:"pagenum" dc:"第几页"`
@@ -83,28 +109,35 @@ type RecruitmentModel struct {
 	Desc           string    `json:"desc" gorm:"type:longtext" dc:"描述"`
 }
 
-func GetRecruitmentList(req RecruitQueryCond, user UserInfo) (data []Recruitment, total int64, code int) {
+func GetRecruitmentList(req RecruitQueryCond, user UserInfo) (data []RecruitRes, total int64, code int) {
+	m := map[string]any{}
+	m["user_id"] = user.Userid
+	if req.DeliveryStatus != 0 {
+		m["delivery_status"] = req.DeliveryStatus
+	}
+	if req.DeliveryTime != "" {
+		m["delivery_time"] = req.DeliveryTime
+	}
 	subQuery := db.Table("recruit_statuses").Select("recruit_id as t_id,max(delivery_status) as t_status").Group("recruit_id")
-	err = db.Table("recruitments").Select("id,company_name,delivery_job,delivery_res,delivery_time,delivery_status,reason,recruit_statuses.desc").Joins("join recruit_statuses on recruitments.id=recruit_statuses.recruit_id").Joins("join (?) as t on "+
+	err = db.Table("recruitments").Select("id,company_name,delivery_job,delivery_res,delivery_time,delivery_status,reason,recruit_statuses.desc,voluntary_num").Joins("join recruit_statuses on recruitments.id=recruit_statuses.recruit_id").Joins("join (?) as t on "+
 		"recruitments.id = t.t_id and recruit_statuses.delivery_status = t.t_status", subQuery).Where(
-		"user_id = ? and company_name like ? and delivery_job like ? and delivery_time = ? and delivery_status = ?", user.Userid, req.CompanyName+"%",
-		req.DeliveryJob+"%", req.DeliveryTime, req.DeliveryStatus).Limit(req.PageSize).Offset((req.PageNum - 1) * req.PageSize).Order("delivery_time desc").Scan(&data).Error
+		"company_name like ? and delivery_job like ? ", req.CompanyName+"%", req.DeliveryJob+"%").Where(m).Limit(req.PageSize).Offset((req.PageNum - 1) * req.PageSize).Order("delivery_time desc").Scan(&data).Error
 	fmt.Println("查找数据的err", err)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		code = errmsg.ERROR
 		total = 0
 		return
 	}
-	err = db.Table("recruitments").Select("id,company_name,delivery_job,delivery_res,delivery_time,delivery_status,reason,recruit_statuses.desc").Joins("join recruit_statuses on recruitments.id=recruit_statuses.recruit_id").Joins("join (?) as t on "+
+	err = db.Table("recruitments").Select("id,company_name,delivery_job,delivery_res,delivery_time,delivery_status,reason,recruit_statuses.desc,voluntary_num").Joins("join recruit_statuses on recruitments.id=recruit_statuses.recruit_id").Joins("join (?) as t on "+
 		"recruitments.id = t.t_id and recruit_statuses.delivery_status = t.t_status", subQuery).Where(
-		"user_id = ? and company_name like ? and delivery_job like ? and delivery_time = ? and delivery_status = ?", user.Userid, req.CompanyName+"%",
-		req.DeliveryJob+"%", req.DeliveryTime, req.DeliveryStatus).Count(&total).Error
+		"company_name like ? and delivery_job like ? ", req.CompanyName+"%", req.DeliveryJob+"%").Where(m).Count(&total).Error
 	fmt.Println("计数的err", err)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		code = errmsg.ERROR
 		total = 0
 		return
 	}
+	fmt.Println("从数据库中查询出的数据", data)
 	code = errmsg.SUCCESS
 	return
 }
@@ -116,7 +149,6 @@ func AddRecruitment(data RecruitmentModel, user UserInfo) (code int) {
 		VoluntaryNum: data.VoluntaryNum,
 		DeliveryJob:  data.DeliveryJob,
 	}
-	t, _ := time.Parse("2006-01-02", data.DeliveryTime)
 	err := db.Transaction(func(tx *gorm.DB) error {
 		err := tx.Create(&recruit).Error
 		if err != nil {
@@ -124,7 +156,7 @@ func AddRecruitment(data RecruitmentModel, user UserInfo) (code int) {
 		}
 		err = tx.Create(&RecruitStatus{
 			RecruitId:      recruit.ID,
-			DeliveryTime:   MyTime(t),
+			DeliveryTime:   data.DeliveryTime,
 			DeliveryRes:    data.DeliveryRes,
 			DeliveryStatus: data.DeliveryStatus,
 			Reason:         data.Reason,
@@ -147,10 +179,9 @@ func EditRecruitment(data RecruitmentModel, user UserInfo) (code int) {
 		VoluntaryNum: data.VoluntaryNum,
 		DeliveryJob:  data.DeliveryJob,
 	}
-	t, _ := time.Parse("2006-01-02", data.DeliveryTime)
 	stat := RecruitStatus{
 		RecruitId:      data.RecruitId,
-		DeliveryTime:   MyTime(t),
+		DeliveryTime:   data.DeliveryTime,
 		DeliveryRes:    data.DeliveryRes,
 		DeliveryStatus: data.DeliveryStatus,
 		Reason:         data.Reason,
@@ -173,16 +204,22 @@ func EditRecruitment(data RecruitmentModel, user UserInfo) (code int) {
 	return errmsg.SUCCESS
 }
 func NextStepRecruitment(data RecruitmentModel) (code int) {
-	//直接插入一条信息到状态记录表
-	t, _ := time.Parse("2006-01-02", data.DeliveryTime)
-	err = db.Create(&RecruitStatus{
+	//判断当前对应的应聘信息的状态是否已经存在
+	input := RecruitStatus{}
+	err = db.Where("recruit_id = ? and delivery_status = ?", data.RecruitId, data.DeliveryStatus).First(&input).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return errmsg.ERROR_STATUS_EXIST
+	}
+	input = RecruitStatus{
 		RecruitId:      data.RecruitId,
-		DeliveryTime:   MyTime(t),
+		DeliveryTime:   data.DeliveryTime,
 		DeliveryRes:    data.DeliveryRes,
 		DeliveryStatus: data.DeliveryStatus,
 		Reason:         data.Reason,
 		Desc:           data.Desc,
-	}).Error
+	}
+	//直接插入一条信息到状态记录表
+	err = db.Create(&input).Error
 	if err != nil {
 		return errmsg.ERROR
 	}
