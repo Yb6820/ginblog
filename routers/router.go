@@ -105,5 +105,5 @@ func InitRouter() {
 		router.GET("sendverifycode", v1.SendEmail)
 
 	}
-	r.Run("127.0.0.1" + utils.HttpPort)
+	r.Run(utils.HttpPort)
 }
