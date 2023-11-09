@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"ginblog/utils/errmsg"
 	"gorm.io/gorm"
 )
@@ -122,7 +121,6 @@ func GetRecruitmentList(req RecruitQueryCond, user UserInfo) (data []RecruitRes,
 	err = db.Table("recruitments").Select("id,company_name,delivery_job,delivery_res,delivery_time,delivery_status,reason,recruit_statuses.desc,voluntary_num").Joins("join recruit_statuses on recruitments.id=recruit_statuses.recruit_id").Joins("join (?) as t on "+
 		"recruitments.id = t.t_id and recruit_statuses.delivery_status = t.t_status", subQuery).Where(
 		"company_name like ? and delivery_job like ? ", req.CompanyName+"%", req.DeliveryJob+"%").Where(m).Limit(req.PageSize).Offset((req.PageNum - 1) * req.PageSize).Order("delivery_time desc").Scan(&data).Error
-	fmt.Println("查找数据的err", err)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		code = errmsg.ERROR
 		total = 0
@@ -131,13 +129,11 @@ func GetRecruitmentList(req RecruitQueryCond, user UserInfo) (data []RecruitRes,
 	err = db.Table("recruitments").Select("id,company_name,delivery_job,delivery_res,delivery_time,delivery_status,reason,recruit_statuses.desc,voluntary_num").Joins("join recruit_statuses on recruitments.id=recruit_statuses.recruit_id").Joins("join (?) as t on "+
 		"recruitments.id = t.t_id and recruit_statuses.delivery_status = t.t_status", subQuery).Where(
 		"company_name like ? and delivery_job like ? ", req.CompanyName+"%", req.DeliveryJob+"%").Where(m).Count(&total).Error
-	fmt.Println("计数的err", err)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		code = errmsg.ERROR
 		total = 0
 		return
 	}
-	fmt.Println("从数据库中查询出的数据", data)
 	code = errmsg.SUCCESS
 	return
 }

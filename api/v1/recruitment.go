@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"ginblog/models"
 	"ginblog/utils/errmsg"
 	"github.com/gin-gonic/gin"
@@ -40,7 +39,7 @@ func GetRecruitmentList(c *gin.Context) {
 func AddRecruitment(c *gin.Context) {
 	var entity models.RecruitmentModel
 	c.ShouldBindJSON(&entity)
-	fmt.Printf("新增应聘信息时获取到的数据%+v\n", entity)
+
 	user, _ := c.Get("user")
 	code := models.AddRecruitment(entity, user.(models.UserInfo))
 	if code != errmsg.SUCCESS {
@@ -60,7 +59,7 @@ func AddRecruitment(c *gin.Context) {
 func EditRecruitment(c *gin.Context) {
 	var entity models.RecruitmentModel
 	c.ShouldBindJSON(&entity)
-	fmt.Printf("编辑应聘信息获取到的数据%+v\n", entity)
+
 	user, _ := c.Get("user")
 	code := models.EditRecruitment(entity, user.(models.UserInfo))
 	if code != errmsg.SUCCESS {
@@ -80,7 +79,7 @@ func EditRecruitment(c *gin.Context) {
 func NextStepRecruitment(c *gin.Context) {
 	var entity models.RecruitmentModel
 	c.ShouldBindJSON(&entity)
-	fmt.Printf("下一步招聘信息获取到的数据%+v\n", entity)
+
 	code := models.NextStepRecruitment(entity)
 	if code != errmsg.SUCCESS {
 		c.JSON(http.StatusOK, gin.H{
