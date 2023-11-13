@@ -1,3 +1,5 @@
 config
 log
 dblog
+web/admin/node_modules
+web/front/node_modules

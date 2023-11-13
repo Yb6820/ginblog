@@ -30,7 +30,7 @@
       >{{ artInfo.desc }}</v-alert
     >
 
-    <div v-html="artInfo.content" class="content ma-5 pa-3 text-justify"></div>
+    <v-md-preview :text="artInfo.content"></v-md-preview>
 
     <v-divider class="ma-5"></v-divider>
     <v-sheet class="ma-3 pa-3">

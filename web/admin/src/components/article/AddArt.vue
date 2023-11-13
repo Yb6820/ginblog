@@ -33,7 +33,7 @@
                     </a-upload>
                 </a-form-model-item>
                 <a-form-model-item label="文章内容" prop="content">
-                  <Editor v-model="artInfo.content"></Editor>
+                  <v-md-editor v-model="artInfo.content" @upload-image="handleUploadImage" :disabled-menus="[]"></v-md-editor>
                 </a-form-model-item>
                 <a-form-model-item>
                     <a-button type="primary" style="margin-right:15px" @click="artSubmit(artInfo.id)"> {{ artInfo.id?'更新':'提交' }} </a-button>
@@ -48,7 +48,6 @@
 import { Url } from '../../plugins/http'
 import Editor from '../editor/index'
 export default {
-  components:{Editor},
   props: ['id'],
   data () {
     return {
@@ -131,6 +130,25 @@ export default {
     },
     addCancel () {
       this.$refs.artInfoRef.resetFields()
+    },
+    async handleUploadImage(event, insertImage, files) {
+      // 拿到 files 之后上传到文件服务器，然后向编辑框中插入对应的内容
+      console.log(files);
+      for(let i in files){
+        let formData=new FormData()
+        formData.append('file',files[i])
+        await this.$http.post('upload', formData).then(
+          response=>{
+            insertImage({
+              url:response.data.url,
+              desc:'desc'
+            })
+          },
+          error=>{
+            this.$message.error('上传图片失败',error.message)
+          }
+        )
+      }
     }
   }
 }
