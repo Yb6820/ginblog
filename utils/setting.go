@@ -18,11 +18,11 @@ var (
 	DbPassword string
 	DbName     string
 
-	Zone        int
-	AccessKey   string
-	SecretKey   string
-	Bucket      string
-	QiniuServer string
+	//Zone        int
+	//AccessKey   string
+	//SecretKey   string
+	//Bucket      string
+	//QiniuServer string
 
 	//redis配置
 	RedisAddr     string
@@ -36,6 +36,12 @@ var (
 	MailAccount string
 	MailPort    int
 	MailKey     string
+
+	//腾讯云对象存储服务配置
+	BucketName string
+	Region     string
+	SecretID   string
+	SecretKey  string
 )
 
 func init() {
@@ -45,9 +51,10 @@ func init() {
 	}
 	LoadServer(file)
 	LoadData(file)
-	LoadQiniu(file)
+	//LoadQiniu(file)
 	LoadMail(file)
 	LoadRedis(file)
+	LoadTencentCos(file)
 }
 
 // 读取服务配置
@@ -66,13 +73,14 @@ func LoadData(file *ini.File) {
 	DbPassword = file.Section("database").Key("DbPassword").MustString("181234")
 	DbName = file.Section("database").Key("DbName").MustString("ginblog")
 }
-func LoadQiniu(file *ini.File) {
-	Zone = file.Section("qiniu").Key("Zone").MustInt(3)
-	AccessKey = file.Section("qiniu").Key("AccessKey").String()
-	SecretKey = file.Section("qiniu").Key("SecretKey").String()
-	Bucket = file.Section("qiniu").Key("Bucket").String()
-	QiniuServer = file.Section("qiniu").Key("QiniuServer").String()
-}
+
+//	func LoadQiniu(file *ini.File) {
+//		Zone = file.Section("qiniu").Key("Zone").MustInt(3)
+//		AccessKey = file.Section("qiniu").Key("AccessKey").String()
+//		SecretKey = file.Section("qiniu").Key("SecretKey").String()
+//		Bucket = file.Section("qiniu").Key("Bucket").String()
+//		QiniuServer = file.Section("qiniu").Key("QiniuServer").String()
+//	}
 func LoadMail(file *ini.File) {
 	MailCompany = file.Section("Email").Key("MailCompany").MustString("smtp.126.com")
 	MailKey = file.Section("Email").Key("MailKey").String()
@@ -85,4 +93,10 @@ func LoadRedis(file *ini.File) {
 	DB = file.Section("redis").Key("DB").MustInt(0)
 	PoolSize = file.Section("redis").Key("PoolSize").MustInt(30)
 	MinIdleConn = file.Section("redis").Key("MinIdleConn").MustInt(30)
+}
+func LoadTencentCos(file *ini.File) {
+	BucketName = file.Section("TencentCos").Key("BucketName").String()
+	Region = file.Section("TencentCos").Key("Region").String()
+	SecretID = file.Section("TencentCos").Key("SecretID").String()
+	SecretKey = file.Section("TencentCos").Key("SecretKey").String()
 }

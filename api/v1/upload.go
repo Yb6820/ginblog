@@ -10,8 +10,7 @@ import (
 
 func UpLoad(c *gin.Context) {
 	file, fileHeader, _ := c.Request.FormFile("file")
-	fileSize := fileHeader.Size
-	url, code := models.UpLoadFile(file, fileSize)
+	url, code := models.UploadFile(&file, fileHeader)
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"message": errmsg.GetErrMsg(code),
