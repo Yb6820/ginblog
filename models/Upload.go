@@ -12,20 +12,21 @@ import (
 	"net/url"
 )
 
-var BucketName = utils.BucketName
-var SecretKey = utils.SecretKey
-var SecretID = utils.SecretID
-var Region = utils.Region
+var bucketName = utils.BucketName
+var secretKey = utils.SecretKey
+var secretID = utils.SecretID
+var region = utils.Region
+var urlHeader = utils.URLHeader
 var client *cos.Client
 
 func initClient() {
 	if client == nil {
-		u, _ := url.Parse(fmt.Sprintf("https://%s.cos.%s.myqcloud.com", BucketName, Region))
+		u, _ := url.Parse(fmt.Sprintf("https://%s.cos.%s.myqcloud.com", bucketName, region))
 		b := &cos.BaseURL{BucketURL: u}
 		client = cos.NewClient(b, &http.Client{
 			Transport: &cos.AuthorizationTransport{
-				SecretID:  SecretID,
-				SecretKey: SecretKey,
+				SecretID:  secretID,
+				SecretKey: secretKey,
 			},
 		})
 	}
@@ -84,11 +85,11 @@ func UploadFile(file *multipart.File, fileHeader *multipart.FileHeader) (string,
 		return "", errmsg.ERROR
 	}
 	//返回一个文件名
-	return "http://img.centyoubet.xyz/" + fileHeader.Filename, errmsg.SUCCESS
+	return urlHeader + fileHeader.Filename, errmsg.SUCCESS
 }
 
 // 从腾讯云服务器下载文件
-func DownloadFile(fileName string) ([]byte, int) {
+func ShowFile(fileName string) ([]byte, int) {
 	initClient()
 	res, err := client.Object.Get(context.Background(), "/ginblog/"+fileName, nil)
 	if err != nil || res.StatusCode != http.StatusOK {
@@ -96,7 +97,6 @@ func DownloadFile(fileName string) ([]byte, int) {
 	}
 	fileByte, _ := io.ReadAll(res.Body)
 	defer res.Body.Close()
-	fmt.Println("获取到的文件数据", string(fileByte))
 	//将文件数据写入http的响应头
 	//gin.Context{}.Request.Response.Write(bytes.NewWriter(fileByte))
 	return fileByte, errmsg.SUCCESS

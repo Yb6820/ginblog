@@ -42,6 +42,7 @@ var (
 	Region     string
 	SecretID   string
 	SecretKey  string
+	URLHeader  string
 )
 
 func init() {
@@ -99,4 +100,5 @@ func LoadTencentCos(file *ini.File) {
 	Region = file.Section("TencentCos").Key("Region").String()
 	SecretID = file.Section("TencentCos").Key("SecretID").String()
 	SecretKey = file.Section("TencentCos").Key("SecretKey").String()
+	URLHeader = file.Section("TencentCos").Key("URLHeader").String()
 }

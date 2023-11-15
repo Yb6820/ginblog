@@ -104,6 +104,8 @@ func InitRouter() {
 		//发送邮箱验证码
 		router.GET("sendverifycode", v1.SendEmail)
 
+		//查看图片
+		router.GET("img/:name", v1.ShowFile)
 	}
 	r.Run(utils.HttpPort)
 }
